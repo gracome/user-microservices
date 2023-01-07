@@ -66,18 +66,14 @@ exports.findAll = async (req, res) => {
 }
 
 exports.findByPk = async (req, res) => {
+    const Id = req.params.id;
+    console.log("jjj",Id);
     try {
-        const message = `un agent a bien été retrouver.`
-        var records = await model.findByPk(req.body);
-        if (_.isArray(records)) {
-            res.json({ message, data: records })
-        } else {
-            res.json({ error: errorMessage })
-        }
+      const messages = await model.findByPk(Id);
+      res.send(messages);
     } catch (error) {
-        console.error(error)
-        res.status(500).json({ error: errorMessage })
-
+      console.error(error);
+      res.status(500).send(error);
     }
 }
 

@@ -14,7 +14,7 @@ const bodyParser = require('body-parser')
 app
 .use(express.json())
 .use(bodyParser.json())
-.use(cors())
+.use(cors({origin: '*'}))
 
 require("./config/passport");
 

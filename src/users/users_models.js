@@ -58,7 +58,7 @@ module.exports.update = async (data) => {
 module.exports.findAll = async (data) => {
     try {
 
-        var records = await sequelize.query(`SELECT * FROM utilisateurs `,
+        var records = await sequelize.query(`SELECT id, username, nom, prenom, email, role,status FROM utilisateurs `,
 
         );
         return records;
@@ -67,11 +67,11 @@ module.exports.findAll = async (data) => {
         throw error;
     }
 }
-module.exports.findByPk = async (data) => {
+module.exports.findByPk = async (id) => {
     try {
-        var records = await sequelize.query(`SELECT * FROM utilisateurs WHERE id = $1 `,
+        var records = await sequelize.query(`SELECT * FROM "utilisateurs" WHERE "utilisateurs"."id" = $1 `,
             {
-                bind: [data.id]
+                bind: [id]
             }
         );
         return records;
@@ -161,7 +161,7 @@ module.exports.findByLogin = async (data) => {
     }
 }
 module.exports.validatePassword = async (plainPassword, hashedPassword) => {
-    console.log(hashedPassword, "ugiugiu");
+    console.log(hashedPassword);
     return await bcrypt.compare(plainPassword, hashedPassword);
 }
 module.exports.hashPassword = async (plainPassword) => {
@@ -172,6 +172,7 @@ module.exports.login = async (data) => {
         const { login, password } = data;
         const user = await this.findByLogin(data);
         if (!user) return { message: 'information de connection incorrect' };
+        console.log(user[0][0].password);
         const passwordIsValid = await this.validatePassword(password, user[0][0].password);
         if (!passwordIsValid) return { message: 'Information de connection incorrect' }
         const accessToken = jwt.sign(
@@ -200,7 +201,7 @@ module.exports.changePassword = async (data) => {
     let {id,oldPassword,newPass} = data
     try {
 
-        let [currentPassword] = await sequelize.query(`SELECT password FROM utilisateurs WHERE id= $1 `,
+        let [currentPassword] = await sequelize.query(`SELECT "password" FROM utilisateurs WHERE "utilisateurs"."id"= $1 `,
             {
                 bind: [ id]
             }
@@ -212,7 +213,7 @@ module.exports.changePassword = async (data) => {
        
         if (samePassword == true) {
             let hashedPassword = await this.hashPassword(newPass);
-             await sequelize.query('UPDATE utilisateurs SET password= $1 WHERE id= $2 ',
+             await sequelize.query('UPDATE "utilisateurs" SET "utilisateurs"."password"= $1 WHERE "utilisateurs"."id"= $2 ',
                 {
                     bind: [hashedPassword, data.id]
                 }

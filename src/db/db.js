@@ -23,9 +23,9 @@ const sequelize = new Sequelize('users', 'postgres', 'omega', {
 
   const user = users(sequelize, DataTypes)
   const userChanel= user_chanel(sequelize, DataTypes)
-  sequelize.sync()
-  .then(_=>{  
-      console.log('la connexion de la base de donnée a bien été synchronisé')
-  }),
+  // sequelize.sync({force: true})
+  // .then(_=>{  
+  //     console.log('la base de donnée a bien été synchronisé')
+  // }),
 
   module.exports =sequelize

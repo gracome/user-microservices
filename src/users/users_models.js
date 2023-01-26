@@ -186,6 +186,7 @@ module.exports.login = async (data) => {
 
         return {
             accessToken: accessToken,
+            id: user[0][0].id,
             expiresIn: 86400,
         }
     } catch (error) {
